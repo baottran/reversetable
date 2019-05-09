@@ -86,15 +86,23 @@ class ViewController: UITableViewController {
                 indexPaths.append(IndexPath(row: i, section: 0))
             }
         
-            let indexPathToJump = IndexPath(row: numAdding + 1, section: 0)
+            
+            let indexPathToJump: IndexPath
+            
+            if let visibile = self.tableView.indexPathsForVisibleRows, let ip = visibile.first {
+                indexPathToJump = IndexPath(row: ip.row + numAdding + 1, section: 0)
+            } else {
+                indexPathToJump = IndexPath(row: numAdding + 1, section: 0)
+            }
         
-        
+            UIView.setAnimationsEnabled(false)
             self.tableView.performBatchUpdates({
                 self.tableView.insertRows(at: indexPaths, with: .automatic)
             }, completion: { _ in
                 self.tableView.scrollToRow(at: indexPathToJump, at: .top, animated: false)
                 self.loading = false
             })
+            UIView.setAnimationsEnabled(true)
         }
     }
     
